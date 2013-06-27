@@ -81,6 +81,12 @@
     // Bind an event to a `callback` function. Passing `"all"` will bind
     // the callback to all events fired.
     on: function(name, callback, context) {
+      if (_.isArray(name)) {
+        _.each(name, function(name) {
+          this.on(name, callback, context);
+        }, this);
+        return this;
+      }
       if (!eventsApi(this, 'on', name, [callback, context]) || !callback) return this;
       this._events || (this._events = {});
       var events = this._events[name] || (this._events[name] = []);
@@ -91,6 +97,12 @@
     // Bind an event to only be triggered a single time. After the first time
     // the callback is invoked, it will be removed.
     once: function(name, callback, context) {
+      if (_.isArray(name)) {
+        _.each(name, function(name) {
+          this.once(name, callback, context);
+        }, this);
+        return this;
+      }
       if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
       var self = this;
       var once = _.once(function() {
@@ -106,6 +118,12 @@
     // callbacks for the event. If `name` is null, removes all bound
     // callbacks for all events.
     off: function(name, callback, context) {
+      if (_.isArray(name)) {
+        _.each(name, function(name) {
+          this.off(name, callback, context);
+        }, this);
+        return this;
+      }
       var retain, ev, events, names, i, l, j, k;
       if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
       if (!name && !callback && !context) {
